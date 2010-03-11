@@ -17,22 +17,27 @@
 				return;
 			}
 			var func = future === true ? 'live' : 'bind',
-				len = document.styleSheets.length;
-			/*
-			if (len == 0) {
-				log('TODO!');
+				sheets = document.styleSheets,
+				check = /:hover\b/,
+				selectors = [];
+			if (!sheets.length) {
 				return;
 			}
-			var style = document.styleSheets[0],
-				rule = 'body:hover',
-				body = document.getElementsByTagName('body')[0],
-				rules;
-			style.insertRule
-				? style.insertRule(rule + '{color:#F00;}', 0)
-				: style.addRule(rule, 'color:#F00;', 0);
-			rules = style.cssRules || style.rules;
-			log(rules[0].selectorText);
-			*/
+			$.each(sheets, function (i, sheet) {
+				var rules = sheet.rules || sheet.cssRules; // Do I need the backup? maybe check for sheet.rules in the $.browser conditional above
+				$.each(rules, function (j, rule) {
+					var text = rule.selectorText;
+					if (check.test(text)) {
+						selectors.push(text);
+						text = text.replace(check, '.hover-ie6');
+						// TODO - double check that addRule works in ie6
+						sheet.addRule(text, rule.cssText.replace(/^.*{/, ''), j);
+					}
+				});
+			});
+			// TEMP!
+			window.ie6hoverSelectors = selectors;
+			// END TEMP
 		}
 	});
 })(jQuery);
