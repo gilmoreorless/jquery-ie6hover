@@ -19,25 +19,31 @@
 			var func = future === true ? 'live' : 'bind',
 				sheets = document.styleSheets,
 				check = /:hover\b/,
+				ignore = /\ba:hover\b/i,
 				selectors = [];
 			if (!sheets.length) {
 				return;
 			}
-			$.each(sheets, function (i, sheet) {
+			for (var i = 0, slen = sheets.length; i < slen; i++) {
+				var sheet = sheets[i];
 				var rules = sheet.rules || sheet.cssRules; // Do I need the backup? maybe check for sheet.rules in the $.browser conditional above
-				$.each(rules, function (j, rule) {
+				for (var j = 0, len = rules.length; j < len; j++) {
+					var rule = rules[j];
 					var text = rule.selectorText;
-					if (check.test(text)) {
+					if (check.test(text) && !ignore.test(text)) {
 						selectors.push(text);
 						text = text.replace(check, '.hover-ie6');
-						// TODO - double check that addRule works in ie6
-						sheet.addRule(text, rule.cssText.replace(/^.*{/, ''), j);
+						alert("MATCH: "+text+" = "+rule.style.cssText);
+						sheet.addRule(text, rule.style.cssText, j);
+						j++;
+						len++;
 					}
-				});
-			});
+				}
+			}
 			// TEMP!
 			window.ie6hoverSelectors = selectors;
 			// END TEMP
+			alert(selectors);
 		}
 	});
 })(jQuery);
