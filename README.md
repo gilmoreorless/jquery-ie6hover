@@ -17,11 +17,13 @@ Usage
 Notes
 -----
 
-* This script will not work on stylesheets loaded from a domain different from the domain the page is on, due to cross-site security policies.
-* The hover scripts use the `mouseenter` and `mouseleave` events, unless you're using a jQuery version less than 1.4 in combination with the `live()` version of this function, in which case `mouseover` and `mouseout` are used (jQuery < 1.4 doesn't handle mouseenter and mouseleave in live events).
-* To save downloading the script for non-IE6 users, it's probably better to load the script within conditional comments:
+This script will not work on stylesheets loaded from a domain different from the domain the page is on, due to cross-site security policies.
 
-	<!--[if IE 6]>
-	<script type="text/javascript" src="jquery.ie6hover.js"></script>
-	<![endif]-->
+The hover scripts use the `mouseenter` and `mouseleave` events, unless you're using a jQuery version less than 1.4 in combination with the `live()` version of this function, in which case `mouseover` and `mouseout` are used (jQuery < 1.4 doesn't handle mouseenter and mouseleave in live events).
+
+To save downloading the script for non-IE6 users, it's probably better to load the script within conditional comments:
+
+    <!--[if IE 6]>
+        <script type="text/javascript" src="jquery.ie6hover.js"></script>
+    <![endif]-->
 
