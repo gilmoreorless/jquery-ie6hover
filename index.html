@@ -3,13 +3,13 @@
 <head>
 	<title>jQuery IE6 hover plugin tests</title>
 	<style type="text/css">
-		#container, ul, li, a {display:block;margin:0;padding:20px;}
-		#container {background-color:#00F;}
-		#container:hover {background-color:#99F;}
+		.container, ul, li, a {display:block;margin:0;padding:20px;}
+		.container {background-color:#00F;}
+		.container:hover {background-color:#99F;}
 		ul {background-color:#0F0;}
-		#container ul:hover {background-color:#9F9;}
+		.container ul:hover {background-color:#9F9;}
 		li {background-color:#F00;}
-		#container:hover ul li {background-color:#F99;}
+		.container:hover ul li {background-color:#F99;}
 		a {background-color:#FF0;}
 		a:hover {background-color:#FF9;}
 	</style>
@@ -18,13 +18,18 @@
 	<script type='text/javascript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
 </head>
 <body>
-	<div id="container">
+	<div class="container">
 		<ul>
 			<li>
 				<a href="#">This is a link</a>
 			</li>
 		</ul>
 	</div>
-	<script type="text/javascript">$.ie6hover();</script>
+	<script type="text/javascript">
+		$.ie6hover(true);
+		setTimeout(function () {
+			$('.container:first').clone().appendTo('body');
+		}, 5000);
+	</script>
 </body>
 </html>

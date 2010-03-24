@@ -16,7 +16,8 @@
 			if (!$.browser.msie) {
 				return;
 			}
-			var func = future === true ? 'live' : 'bind',
+			var klass = 'hover-ie6',
+				func = future === true ? 'live' : 'bind',
 				sheets = document.styleSheets,
 				check = /:hover\b/,
 				ignore = /\ba:hover\b/i,
@@ -32,7 +33,7 @@
 						text = rule.selectorText;
 					if (check.test(text) && !ignore.test(text)) {
 						selectors.push(text.replace(check, ''));
-						text = text.replace(check, '.hover-ie6');
+						text = text.replace(check, '.' + klass);
 						sheet.addRule(text, rule.style.cssText, j);
 						j++;
 						len++;
@@ -41,12 +42,13 @@
 			}
 			
 			$(function () {
-				$(selectors.join(',')).hover(function () {
-					$(this).addClass('hover-ie6');
-				}, function () {
-					$(this).removeClass('hover-ie6');
+				$(selectors.join(','))[func]('mouseenter', function () {
+					$(this).addClass(klass);
+				})[func]('mouseleave', function () {
+					$(this).removeClass(klass);
 				});
 			});
 		}
 	});
 })(jQuery);
+                                
