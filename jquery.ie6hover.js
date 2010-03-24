@@ -25,25 +25,28 @@
 				return;
 			}
 			for (var i = 0, slen = sheets.length; i < slen; i++) {
-				var sheet = sheets[i];
-				var rules = sheet.rules || sheet.cssRules; // Do I need the backup? maybe check for sheet.rules in the $.browser conditional above
+				var sheet = sheets[i],
+					rules = sheet.rules;
 				for (var j = 0, len = rules.length; j < len; j++) {
-					var rule = rules[j];
-					var text = rule.selectorText;
+					var rule = rules[j],
+						text = rule.selectorText;
 					if (check.test(text) && !ignore.test(text)) {
-						selectors.push(text);
+						selectors.push(text.replace(check, ''));
 						text = text.replace(check, '.hover-ie6');
-						alert("MATCH: "+text+" = "+rule.style.cssText);
 						sheet.addRule(text, rule.style.cssText, j);
 						j++;
 						len++;
 					}
 				}
 			}
-			// TEMP!
-			window.ie6hoverSelectors = selectors;
-			// END TEMP
-			alert(selectors);
+			
+			$(function () {
+				$(selectors.join(',')).hover(function () {
+					$(this).addClass('hover-ie6');
+				}, function () {
+					$(this).removeClass('hover-ie6');
+				});
+			});
 		}
 	});
 })(jQuery);
