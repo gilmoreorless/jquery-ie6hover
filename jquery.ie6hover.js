@@ -13,7 +13,7 @@
 	$.extend({
 		ie6hover: function (future) {
 			// $.browser is deprecated, but there's no way to feature detect :hover support
-			if (!$.browser.msie) {
+			if (!$.browser.msie || $.browser.version != '6.0') {
 				return;
 			}
 			var klass = 'hover-ie6',
@@ -27,7 +27,12 @@
 			}
 			for (var i = 0, slen = sheets.length; i < slen; i++) {
 				var sheet = sheets[i],
-					rules = sheet.rules;
+					rules;
+				try {
+					rules = sheet.rules;	
+				} catch (e) {
+					continue;
+				}
 				for (var j = 0, len = rules.length; j < len; j++) {
 					var rule = rules[j],
 						text = rule.selectorText;
@@ -41,13 +46,15 @@
 				}
 			}
 			
-			$(function () {
-				$(selectors.join(','))[func]('mouseenter', function () {
-					$(this).addClass(klass);
-				})[func]('mouseleave', function () {
-					$(this).removeClass(klass);
+			if (selectors.length) {
+				$(function () {
+					$(selectors.join(','))[func]('mouseenter', function () {
+						$(this).addClass(klass);
+					})[func]('mouseleave', function () {
+						$(this).removeClass(klass);
+					});
 				});
-			});
+			}
 		}
 	});
 })(jQuery);
