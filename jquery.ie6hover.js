@@ -19,28 +19,28 @@
 			var klass = 'hover-ie6',
 				func = future === true ? 'live' : 'bind',
 				// jQuery < 1.4 can't handle 'mouseenter' and 'mouseleave' in live events
-				is14 = /^1.[4-9]/.test($.fn.jquery),
+				is14 = /^1\.[4-9]/.test($.fn.jquery),
 				overEvent = is14 || !future ? 'mouseenter' : 'mouseover',
 				outEvent = is14 || !future ? 'mouseleave' : 'mouseout',
 				sheets = document.styleSheets,
 				check = /:hover\b/g,
 				ignore = /\ba:hover\b/ig,
-				selectors = [];
+				selectors = [],
+				i, j, len, slen, sheet, rules, rule, text;
 			if (!sheets.length) {
 				return;
 			}
-			for (var i = 0, slen = sheets.length; i < slen; i++) {
-				var sheet = sheets[i],
-					rules;
+			for (i = 0, slen = sheets.length; i < slen; i++) {
+				sheet = sheets[i];
 				// Gracefully handle any cross-domain security errors
 				try {
 					rules = sheet.rules;	
 				} catch (e) {
 					continue;
 				}
-				for (var j = 0, len = rules.length; j < len; j++) {
-					var rule = rules[j],
-						text = rule.selectorText;
+				for (j = 0, len = rules.length; j < len; j++) {
+					rule = rules[j];
+					text = rule.selectorText;
 					if (check.test(text) && !ignore.test(text)) {
 						// Add the selector in a way that jQuery can handle (ie. no ":hover")
 						selectors.push(text.replace(check, ''));
@@ -82,4 +82,4 @@
 		}
 	});
 })(jQuery);
-                                
+
