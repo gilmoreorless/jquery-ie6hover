@@ -1,5 +1,5 @@
 /*!
- * jQuery IE6 hover support plug-in v1.0
+ * jQuery IE6 hover support plug-in v1.0.1
  * Add support for the :hover CSS pseudo-selector to IE6
  *
  * @requires jQuery v1.3 or later
@@ -55,8 +55,22 @@
 				}
 			}
 			
-			// Add hover event handlers to selectors
 			if (selectors.length) {
+				// Quick function to de-duplicate selector array before sending to jQuery, to save finding duplicate DOM nodes
+				if (selectors.length > 1) {
+					selectors = (function (oldArr) {
+						for (var newArr = [], map = {}, i = 0, l = oldArr.length, val; i < l; i++) {
+							val = oldArr[i];
+							if (!map[val]) {
+								map[val] = true;
+								newArr.push(val);
+							}
+						}
+						return newArr;
+					})(selectors);
+				}
+				
+				// Add hover event handlers to selectors
 				$(function () {
 					$(selectors.join(','))[func](overEvent, function () {
 						$(this).addClass(klass);

@@ -10,9 +10,9 @@ There are smarts built in to not run if the browser is not IE6, and also not to 
 Usage
 -----
 
-`$.ie6hover();  // Add hover support to only the elements on a page at the time the function is called.`
+`$.ie6hover();` - Add hover support to only the elements on a page at the time the function is called.
 
-`$.ie6hover(true);  // Add hover support to all current and future elements on a page.`
+`$.ie6hover(true);` - Add hover support to all current and future elements on a page.
 
 Notes
 -----
