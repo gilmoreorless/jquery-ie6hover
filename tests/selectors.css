@@ -1,0 +1,50 @@
+div:hover {color:red;}
+a:hover {color:red;}
+#id:hover {color:red;}
+.class:hover {color:red;}
+[attr]:hover {color:red;}
+div div:hover {color:red;}
+div a:hover {color:red;}
+div #id:hover {color:red;}
+div .class:hover {color:red;}
+div [attr]:hover {color:red;}
+div:hover div {color:red;}
+a:hover div {color:red;}
+#id:hover div {color:red;}
+.class:hover div {color:red;}
+[attr]:hover div {color:red;}
+div#id:hover {color:red;}
+div.class:hover {color:red;}
+div[attr]:hover {color:red;}
+a#id:hover {color:red;}
+a.class:hover {color:red;}
+a[attr]:hover {color:red;}
+#id.class:hover {color:red;}
+.class[attr]:hover {color:red;}
+div div#id:hover {color:red;}
+div div.class:hover {color:red;}
+div div[attr]:hover {color:red;}
+div a#id:hover {color:red;}
+div a.class:hover {color:red;}
+div a[attr]:hover {color:red;}
+div#id:hover div {color:red;}
+div.class:hover div {color:red;}
+div[attr]:hover div {color:red;}
+a#id:hover div {color:red;}
+a.class:hover div {color:red;}
+a[attr]:hover div {color:red;}
+div[attr] div#id:hover {color:red;}
+div#id div.class:hover {color:red;}
+div.class div[attr]:hover {color:red;}
+div[attr] a#id:hover {color:red;}
+div#id a.class:hover {color:red;}
+div.class a[attr]:hover {color:red;}
+div#id:hover div[attr] {color:red;}
+div.class:hover div#id {color:red;}
+div[attr]:hover div.class {color:red;}
+a#id:hover div[attr] {color:red;}
+a.class:hover div#id {color:red;}
+a[attr]:hover div.class {color:red;}
+div1, div2:hover {color:red;}
+div1:hover, div2 {color:red;}
+div1, div2:hover, div3 {color:red;}

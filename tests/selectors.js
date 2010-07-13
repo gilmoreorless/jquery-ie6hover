@@ -1,15 +1,14 @@
-var testHoverSelectors = function (future) {
+var testHoverSelectors = function () {
+//////
+	var original = [], replaced = [];
+//////
 	var klass = 'hover-ie6',
-		// jQuery < 1.4 can't handle 'mouseenter' and 'mouseleave' in live events
-		is14 = /^1\.[4-9]/.test($.fn.jquery),
 		sheets = document.styleSheets,
 		check = /:hover\b/g,
-		ignore = /\ba:hover\b/ig,
+		checkErase = /:hover\b.*/g,
+		ignore = /\ba([#\.\[].*)*:hover\b/ig, // doesn't pick up a[attr] - work it out later
 		selectors = [],
 		i, j, len, slen, sheet, rules, rule, text;
-//////
-	var original = [], replaced;
-//////
 	if (!sheets.length) {
 		return;
 	}
@@ -26,38 +25,31 @@ var testHoverSelectors = function (future) {
 		}
 		for (j = 0, len = rules.length; j < len; j++) {
 			rule = rules[j];
+			if (!rule) continue;
 			text = rule.selectorText;
+			original.push(text);
 			if (check.test(text) && !ignore.test(text)) {
 				// Add the selector in a way that jQuery can handle (ie. no ":hover")
-				selectors.push(text.replace(check, ''));
+				selectors.push(text.replace(checkErase, ''));
 				// Replace ":hover" with ".hover-ie6" and add a new CSS rule
 				text = text.replace(check, '.' + klass);
-				// New CSS rule should be added at the same place as the existing rule to keep inheritance working
-				sheet.addRule(text, rule.style.cssText, j);
 				// Increase the counters due to the new rule being inserted
-				j++;
 				len++;
+			} else {
+				selectors.push('');
 			}
+			replaced.push(text);
 		}
 	}
 
-	if (selectors.length) {
-		// Quick function to de-duplicate selector array before sending to jQuery, to save finding duplicate DOM nodes
-		if (selectors.length > 1) {
-			selectors = (function (oldArr) {
-				for (var newArr = [], map = {}, i = 0, l = oldArr.length, val; i < l; i++) {
-					val = oldArr[i];
-					if (!map[val]) {
-						map[val] = true;
-						newArr.push(val);
-					}
-				}
-				return newArr;
-			})(selectors);
+/////
+	for (i = 0, len = original.length; i < len; i++) {
+		if (original[i] != replaced[i]) {
+			replaced[i] = '<span>' + replaced[i] + '</span>';
 		}
-
-		// Assign selectors to public object
-		testHoverSelectors.selectors = selectors;
 	}
+	$('#selectors').html(selectors.join('<br />'));
+	$('#original').html(original.join('<br />'));
+	$('#replaced').html(replaced.join('<br />'));
+/////
 }
-testHoverSelectors.selectors = [];
