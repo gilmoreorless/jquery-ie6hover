@@ -34,8 +34,11 @@
 				sheet = sheets[i];
 				// Gracefully handle any cross-domain security errors
 				try {
-					rules = sheet.rules;	
+					rules = sheet.rules;
 				} catch (e) {
+					continue;
+				}
+				if (!rules || !rules.length) {
 					continue;
 				}
 				for (j = 0, len = rules.length; j < len; j++) {
@@ -69,6 +72,9 @@
 						return newArr;
 					})(selectors);
 				}
+
+				// Assign selectors to public object
+				$.ie6hover.selectors = selectors;
 				
 				// Add hover event handlers to selectors
 				$(function () {
@@ -81,5 +87,6 @@
 			}
 		}
 	});
+	$.ie6hover.selectors = [];
 })(jQuery);
 
