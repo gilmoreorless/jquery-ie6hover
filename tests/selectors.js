@@ -2,13 +2,22 @@ var testHoverSelectors = function () {
 //////
 	var original = [], replaced = [];
 //////
-	var klass = 'hover-ie6',
+	var defaultClass = 'hover-ie6',
+		currentClass = '',
 		sheets = document.styleSheets,
-		check = /:hover\b/g,
-		checkErase = /:hover\b.*/g,
-		ignore = /\ba([#\.\[].*)*:hover\b/ig, // doesn't pick up a[attr] - work it out later
+		rCheck = /(\[.*?\])?:hover\b/g,
+		rCheckErase = /:hover\b.*/ig,
+		rIgnore = /\ba([#\.\[].*)*:hover\b/ig,
+		rMulti = /\s*,\s*/g,
+		rClass = /\.(\S+?)(\[.*?\])?(:hover)\b/ig,
 		selectors = [],
-		i, j, len, slen, sheet, rules, rule, text;
+		selectorClasses = {
+			_default: defaultClass
+		},
+		selector, i, j, k, len, slen, tlen, sheet, rules, rule, text, tsplit;
+/////
+	var text2, wasUsed;
+/////
 	if (!sheets.length) {
 		return;
 	}
@@ -24,32 +33,72 @@ var testHoverSelectors = function () {
 			continue;
 		}
 		for (j = 0, len = rules.length; j < len; j++) {
+			wasUsed = false;
 			rule = rules[j];
-			if (!rule) continue;
-			text = rule.selectorText;
+			text = text2 = rule.selectorText;
 			original.push(text);
-			if (check.test(text) && !ignore.test(text)) {
-				// Add the selector in a way that jQuery can handle (ie. no ":hover")
-				selectors.push(text.replace(checkErase, ''));
-				// Replace ":hover" with ".hover-ie6" and add a new CSS rule
-				text = text.replace(check, '.' + klass);
-				// Increase the counters due to the new rule being inserted
-				len++;
-			} else {
-				selectors.push('');
+			// Split up multiple selectors per rule to find just the one(s) we want
+			tsplit = text.split(rMulti);
+			for (k = 0, tlen = tsplit.length; k < tlen; k++) {
+				text = tsplit[k];
+				rCheck.lastIndex = 0;
+				rIgnore.lastIndex = 0;
+				if (rCheck.test(text) && !rIgnore.test(text)) {
+					// Add the selector in a way that jQuery can handle (ie. no ":hover")
+					selector = text.replace(rCheckErase, '');
+					selectors.push(selector);
+					// Check which class to add new rule for - default to ".hover-ie6"
+					// IE6 can't handle .class1.class2 (it reads as just .class2), so if there's
+					// a class already in the selector, generate a new custom class (eg .class1-class2)
+					currentClass = defaultClass;
+					rClass.lastIndex = 0;
+					text = text.replace(rClass, function (match, className, attr, hover) {
+						currentClass = className + '-' + defaultClass;
+						return hover;
+					});
+					// Replace ":hover" with new class (ignoring attribute rules) and add a new CSS rule
+					text = text.replace(rCheck, '.' + currentClass);
+					// If the replacement class is not standard, add it to the selector class map
+					if (currentClass !== defaultClass) {
+						selectorClasses[selector] = currentClass;
+					}
+					replaced.push(text);
+					wasUsed = true;
+				} else if (tlen == 1) {
+					selectors.push('');
+				}
 			}
-			replaced.push(text);
+			if (!wasUsed) {
+				replaced.push('');
+			}
 		}
 	}
 
 /////
-	for (i = 0, len = original.length; i < len; i++) {
-		if (original[i] != replaced[i]) {
-			replaced[i] = '<span>' + replaced[i] + '</span>';
+	var replacedExpected = ['div.hover-ie6','','#id.hover-ie6','.class-hover-ie6','.hover-ie6','div div.hover-ie6','','div #id.hover-ie6','div .class-hover-ie6','div .hover-ie6','div.hover-ie6 div','','#id.hover-ie6 div','.class-hover-ie6 div','.hover-ie6 div','div#id.hover-ie6','div.class-hover-ie6','div.hover-ie6','','','','#id.class-hover-ie6','.class-hover-ie6','div div#id.hover-ie6','div div.class-hover-ie6','div div.hover-ie6','','','','div#id.hover-ie6 div','div.class-hover-ie6 div','div.hover-ie6 div','','','','div[attr] div#id.hover-ie6','div#id div.class-hover-ie6','div.class div.hover-ie6','','','','div#id.hover-ie6 div[attr]','div.class-hover-ie6 div#id','div.hover-ie6 div.class','','','','div2.hover-ie6','div1.hover-ie6','div2.hover-ie6','#id2.class-hover-ie6','','','','','',''],
+		selectorsExpected = ['div','','#id','.class','[attr]','div div','','div #id','div .class','div [attr]','div','','#id','.class','[attr]','div#id','div.class','div[attr]','','','','#id.class','.class[attr]','div div#id','div div.class','div div[attr]','','','','div#id','div.class','div[attr]','','','','div[attr] div#id','div#id div.class','div.class div[attr]','','','','div#id','div.class','div[attr]','','','','div2','div1','div2','#id2.class','','','','','',''];
+
+	for (i = 0, len = replaced.length; i < len; i++) {
+		if (replaced[i] != replacedExpected[i]) {
+			replaced[i] = '<span class="bad">' + (replaced[i] || '&nbsp;') + '</span>';
+		} else {
+			replaced[i] = '<span class="good">' + replaced[i] + '</span>';
+		}
+		if (selectors[i] != selectorsExpected[i]) {
+			selectors[i] = '<span class="bad">' + (selectors[i] || '&nbsp;') + '</span>';
+		} else {
+			selectors[i] = '<span class="good">' + selectors[i] + '</span>';
 		}
 	}
-	$('#selectors').html(selectors.join('<br />'));
-	$('#original').html(original.join('<br />'));
-	$('#replaced').html(replaced.join('<br />'));
+
+	var output = function (selector, array) {
+		$('<div>' + array.join('</div><div>') + '</div>').appendTo(selector);
+	};
+	output('#original', original);
+	output('#replaced-expected', replacedExpected);
+	output('#replaced', replaced);
+	output('#selectors-expected', selectorsExpected);
+	output('#selectors', selectors);
+	console.warn(selectorClasses);
 /////
 }

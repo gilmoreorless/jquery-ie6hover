@@ -6,19 +6,25 @@
 	<!--link rel="stylesheet" type="text/css" href="http://assets3.github.com/stylesheets/bundle_github.css" /-->
 	<link rel="stylesheet" type="text/css" href="selectors.css" />
 	<style type="text/css">
-		pre {background-color:#CCC; border:1px solid #000; color:#000; float:left; margin-left:10px; padding:5px; width:30%;}
-		pre span {color:#F00;}
+		pre {background-color:#CCC; border:1px solid #000; color:#000; float:left; margin-left:10px; width:18%;}
+		pre div {border-bottom:1px solid #000; height:14px; padding:5px;}
+		pre div.header {background-color:#000; color:#FFF; font-weight:bold;}
+		pre span {display:block; width:100%;}
+		pre span.bad {background-color:#F66;}
+		pre span.good {color:#090;}
 	</style>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.3.min.js"></script>
+	<script type="text/javascript" src="../lib/jquery-1.4.2.min.js"></script>
 	<script type="text/javascript" src="compat.js"></script>
 	<script type="text/javascript" src="selectors.js"></script>
 	<script type="text/javascript" src="../jquery.ie6hover.js"></script>
 	<!--<script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script>-->
 </head>
 <body>
-	<pre id="original"></pre>
-	<pre id="replaced"></pre>
-	<pre id="selectors"></pre>
+	<pre id="original"><div class="header">Original CSS</div></pre>
+	<pre id="replaced-expected"><div class="header">Expected CSS</div></pre>
+	<pre id="replaced"><div class="header">Generated CSS</div></pre>
+	<pre id="selectors-expected"><div class="header">Expected jQuery selector</div></pre>
+	<pre id="selectors"><div class="header">Generated jQuery selector</div></pre>
 	<script type="text/javascript">
 		testHoverSelectors();
 	</script>
