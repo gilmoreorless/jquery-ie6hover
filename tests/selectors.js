@@ -1,6 +1,6 @@
 var testHoverSelectors = function () {
 //////
-	var original = [], replaced = [];
+	var original = [], replaced = [], wasUsed;
 //////
 	var defaultClass = 'hover-ie6',
 		currentClass = '',
@@ -9,15 +9,12 @@ var testHoverSelectors = function () {
 		rCheckErase = /:hover\b.*/ig,
 		rIgnore = /\ba([#\.\[].*)*:hover\b/ig,
 		rMulti = /\s*,\s*/g,
-		rClass = /\.(\S+?)(\[.*?\])?(:hover)\b/ig,
+		rClass = /\.(\S+?)(?:\[.*?\])?(:hover)\b/ig,
 		selectors = [],
 		selectorClasses = {
 			_default: defaultClass
 		},
 		selector, i, j, k, len, slen, tlen, sheet, rules, rule, text, tsplit;
-/////
-	var text2, wasUsed;
-/////
 	if (!sheets.length) {
 		return;
 	}
@@ -35,7 +32,7 @@ var testHoverSelectors = function () {
 		for (j = 0, len = rules.length; j < len; j++) {
 			wasUsed = false;
 			rule = rules[j];
-			text = text2 = rule.selectorText;
+			text = rule.selectorText;
 			original.push(text);
 			// Split up multiple selectors per rule to find just the one(s) we want
 			tsplit = text.split(rMulti);
@@ -52,7 +49,7 @@ var testHoverSelectors = function () {
 					// a class already in the selector, generate a new custom class (eg .class1-class2)
 					currentClass = defaultClass;
 					rClass.lastIndex = 0;
-					text = text.replace(rClass, function (match, className, attr, hover) {
+					text = text.replace(rClass, function (match, className, hover) {
 						currentClass = className + '-' + defaultClass;
 						return hover;
 					});
