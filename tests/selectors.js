@@ -89,7 +89,7 @@ var testHoverSelectors = function () {
 	}
 
 	var output = function (selector, array) {
-		$('<div>' + array.join('</div><div>') + '</div>').appendTo(selector);
+		$('<li>' + array.join('</li><li>') + '</li>').appendTo(selector);
 	};
 	output('#original', original);
 	output('#replaced-expected', replacedExpected);

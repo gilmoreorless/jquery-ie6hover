@@ -4,23 +4,23 @@
 	<title>jQuery IE6 hover plugin tests</title>
 	<link rel="stylesheet" type="text/css" href="selectors.css" />
 	<style type="text/css">
-		pre {background-color:#CCC; border:1px solid #000; color:#000; float:left; margin-left:10px; width:18%;}
-		pre div {border-bottom:1px solid #000; height:14px; padding:5px;}
-		pre div.header {background-color:#000; color:#FFF; font-weight:bold;}
-		pre span {display:block; width:100%;}
-		pre span.bad {background-color:#F66;}
-		pre span.good {color:#090;}
+		ul {background-color:#CCC; border:1px solid #000; color:#000; float:left; font-family:Consolas, "Courier New", Courier, monospace; font-size:13px; list-style:none; margin:0 0 0 10px; padding:0; width:18%;}
+		li {border-bottom:1px solid #000; height:17px; list-style:none; margin:0; padding:5px;}
+		li.header {background-color:#000; color:#FFF; font-weight:bold;}
+		li span {display:block; width:100%;}
+		li span.bad {background-color:#F66;}
+		li span.good {color:#090;}
 	</style>
 	<script type="text/javascript" src="../lib/jquery-1.4.2.min.js"></script>
 	<script type="text/javascript" src="compat.js"></script>
 	<script type="text/javascript" src="selectors.js"></script>
 </head>
 <body>
-	<pre id="original"><div class="header">Original CSS</div></pre>
-	<pre id="replaced-expected"><div class="header">Expected CSS</div></pre>
-	<pre id="replaced"><div class="header">Generated CSS</div></pre>
-	<pre id="selectors-expected"><div class="header">Expected jQuery selector</div></pre>
-	<pre id="selectors"><div class="header">Generated jQuery selector</div></pre>
+	<ul id="original"><li class="header">Original CSS</li></ul>
+	<ul id="replaced-expected"><li class="header">Expected CSS</li></ul>
+	<ul id="replaced"><li class="header">Generated CSS</li></ul>
+	<ul id="selectors-expected"><li class="header">Expected jQuery selector</li></ul>
+	<ul id="selectors"><li class="header">Generated jQuery selector</li></ul>
 	<script type="text/javascript">
 		testHoverSelectors();
 	</script>
