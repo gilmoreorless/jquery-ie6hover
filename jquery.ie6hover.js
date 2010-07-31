@@ -22,18 +22,16 @@
 				overEvent = is14 || !future ? 'mouseenter' : 'mouseover',
 				outEvent = is14 || !future ? 'mouseleave' : 'mouseout',
 				sheets = document.styleSheets,
-				rCheck = /(\[.*?\])?:hover\b/g,
-				rCheckErase = /:hover\b.*/ig,
-				rIgnore = /\ba([#\.\[].*)*:hover\b/ig,
-				rMulti = /\s*,\s*/g,
-				rClass = /\.(\S+?)(?:\[.*?\])?(:hover)\b/ig,
+				rCheck = /(.*?)(:hover)\b/g,
+				rIgnore = /\bA([#\.].*)*:hover\b/ig,
+				rClass = /\.(\S+?)\b/ig,
 				defaultClass = 'hover-ie6',
 				currentClass = '',
 				selectors = [],
 				selectorClasses = {
 					_default: defaultClass
 				},
-				selector, i, j, k, len, slen, tlen, sheet, rules, rule, text, tsplit;
+				selector, selMatch, i, j, len, slen, sheet, rules, rule, text, newText, newTextChunk, textIndex;
 			if (!sheets.length) {
 				return;
 			}
@@ -51,37 +49,50 @@
 				for (j = 0, len = rules.length; j < len; j++) {
 					rule = rules[j];
 					text = rule.selectorText;
-					// Split up multiple selectors per rule to find just the one(s) we want
-					tsplit = text.split(rMulti);
-					for (k = 0, tlen = tsplit.length; k < tlen; k++) {
-						text = tsplit[k];
+					newText = [];
+					newTextChunk = '';
+					// Reset regexps to make sure we're matching at the start of the selector
+					rCheck.lastIndex = 0;
+					rIgnore.lastIndex = 0;
+					if (rCheck.test(text) && !rIgnore.test(text)) {
+						currentClass = defaultClass;
+						selector = '';
 						rCheck.lastIndex = 0;
-						rIgnore.lastIndex = 0;
-						if (rCheck.test(text) && !rIgnore.test(text)) {
-							// Add the selector in a way that jQuery can handle (ie. no ":hover")
-							selector = text.replace(rCheckErase, '');
+						// Add the CSS selector in a way that jQuery can handle (ie. no ":hover")
+						// Needs to loop through to handle multiple ":hover" instances per selector
+						// (odd use case, but still plausible)
+						while ((selMatch = rCheck.exec(text))) {
+							textIndex = rCheck.lastIndex;
+							selector += selMatch[1];
 							selectors.push(selector);
+							// Build new CSS rule bit-by-bit, allows for fine-grained class replacement
+							newTextChunk = selMatch[1];
 							// Check which class to add new rule for - default to ".hover-ie6"
 							// IE6 can't handle .class1.class2 (it reads as just .class2), so if there's
 							// a class already in the selector, generate a new custom class (eg .class1-class2)
-							currentClass = defaultClass;
 							rClass.lastIndex = 0;
-							text = text.replace(rClass, function (match, className, hover) {
+							newTextChunk = newTextChunk.replace(rClass, function (match, className) {
 								currentClass = className + '-' + defaultClass;
-								return hover;
-							});
-							// Replace ":hover" with new class (ignoring attribute rules)
-							text = text.replace(rCheck, '.' + currentClass);
-							// Add a new CSS rule at the same place as the existing rule to keep CSS inheritance working
-							sheet.addRule(text, rule.style.cssText, j);
-							// If the replacement class is not standard, add it to the selector class map
+								return '';
+							}) + '.' + currentClass;
+							// If the replacement class is not standard, add it to the selector class map for jQuery
 							if (currentClass !== defaultClass) {
 								selectorClasses[selector] = currentClass;
 							}
-							// Increase the counters due to the new rule being inserted
-							j++;
-							len++;
+							newText.push(newTextChunk);
 						}
+						// Make sure to catch any remaining bit of CSS text that wasn't matched
+						if (textIndex < text.length) {
+							newText.push(text.substr(textIndex));
+						}
+						// Add a new CSS rule at the same place as the existing rule to keep CSS inheritance working
+						text = newText.join('');
+						sheet.addRule(text, rule.style.cssText, j);
+						// Increase the counters due to the new rule being inserted
+						j++;
+						len++;
+						// Add new rule to public object to aid debugging
+						$.ie6hover.selectors.css.push([text, rule.style.cssText]);
 					}
 				}
 			}
@@ -101,8 +112,8 @@
 					})(selectors);
 				}
 
-				// Assign selectors to public object to aid debugging
-				$.ie6hover.selectors = selectors;
+				// Add selectors to public object to aid debugging
+				$.ie6hover.selectors.jQuery = selectors;
 				
 				// Add hover event handlers to selectors
 				$(function () {
@@ -118,6 +129,9 @@
 			}
 		}
 	});
-	$.ie6hover.selectors = [];
+	$.ie6hover.selectors = {
+		css: [],
+		jQuery: []
+	};
 })(jQuery);
 

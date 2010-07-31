@@ -3,7 +3,7 @@
 <head>
 	<title>jQuery IE6 hover plugin tests</title>
 	<!-- External stylesheet is loaded to test cross-domain access errors -->
-	<link rel="stylesheet" type="text/css" href="http://assets3.github.com/stylesheets/bundle_github.css" />
+	<!--link rel="stylesheet" type="text/css" href="http://assets3.github.com/stylesheets/bundle_github.css" /-->
 	<script type="text/javascript">
 		var query = location.search,
 			rJQ = /jQuery=(\d\.\d(?:\.\d)?)/,
@@ -11,7 +11,7 @@
 			jQVersion = jQMatch ? jQMatch[1] : '1.4.2';
 		document.write('<script type="text/javascript" src="../lib/jquery-' + jQVersion + '.min.js"><\x2Fscript>');
 		if (query.indexOf('firebug')+1) {
-			document.write('<script type="text/javascript" src="../lib/firebug-lite-1.3.0.js"><\x2Fscript>');
+			document.write('<script type="text/javascript" src="../lib/firebug-lite.js">{startOpened:true}<\x2Fscript>');
 		}
 	</script>
 	<script type="text/javascript" src="../jquery.ie6hover.js"></script>
@@ -20,8 +20,8 @@
 		div:hover {background-color:#F90;}
 		div.shell, p:hover {background-color:#9F9;}
 		div.shell:hover {background-color:#090;}
-		div#special.shell[customattr=true] {background-color:#0FF;}
-		div#special.shell[customattr=true]:hover {background-color:#06C;}
+		div#special.shell {background-color:#0FF;}
+		div#special.shell:hover {background-color:#06C;}
 		ul {list-style:none; margin:0; padding:0;}
 		li {color:#000; list-style:none; margin:5px; padding:10px; border:2px solid #000;}
 		li:hover {border:2px solid #F00 !important;}
@@ -38,11 +38,11 @@
 		<strong>div</strong> - Normal: yellow background / Hover: orange background
 		<div class="shell">
 			<strong>div.shell</strong> - Normal: light green background / Hover: dark green background
-			<div class="shell" id="special" customattr="true">
+			<div class="shell" id="special">
 				<strong>div#special.shell</strong> - Normal: teal background / Hover: dark blue background
 				<ul>
 					<li>
-						<strong>li</strong> - Normal: black text &amp; solid border / Hover: red text &amp; solid border / Hover outermost container: orange dashed border / Hover immediate container: teal dashed border
+						<strong>li</strong> - Normal: black text &amp; solid border / Hover: red text <s>&amp; solid border</s> <i>(needs fix for "!important")</i> / Hover outermost container: orange dashed border / Hover immediate container: teal dashed border
 					</li>
 					<li class="extra">
 						<strong>li.extra</strong> - Same as above, but hover changes to pink background
