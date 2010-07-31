@@ -39,10 +39,9 @@ Changelog
 -----
 
 1.1.0
-* Small rebuild of how CSS rules are matched
-* Added support for a lot of new cases that weren't matched before:
+* Rebuilt how CSS rules are matched
+* Added support for a lot of new cases that weren't matched before, mainly:
   * `#id` and `.class` attributes
-  * multiple rules per line (comma separated)
   * multiple hovered elements per rule
 
 1.0.1

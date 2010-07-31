@@ -41,37 +41,32 @@ var testHoverSelectors = function () {
 			rIgnore.lastIndex = 0;
 			if (rCheck.test(text) && !rIgnore.test(text)) {
 				currentClass = defaultClass;
-				// Add the selector in a way that jQuery can handle (ie. no ":hover")
-				// Needs to loop through to handle multiple ":hover" instances per selector
-				// (odd use case, but still plausible)
 				selector = '';
 				rCheck.lastIndex = 0;
-				console.info('text: ', text);
+				// Add the CSS selector in a way that jQuery can handle (ie. no ":hover")
+				// Needs to loop through to handle multiple ":hover" instances per selector
+				// (odd use case, but still plausible)
 				while ((selMatch = rCheck.exec(text))) {
 					textIndex = rCheck.lastIndex;
 					selector += selMatch[1];
-					newTextChunk = selMatch[1];
 					selectors.push(selector);
-					console.log('selector: %s --- newText: %s --- ', selector, newTextChunk, selMatch);
+					// Build new CSS rule bit-by-bit, allows for fine-grained class replacement
+					newTextChunk = selMatch[1];
 					// Check which class to add new rule for - default to ".hover-ie6"
 					// IE6 can't handle .class1.class2 (it reads as just .class2), so if there's
 					// a class already in the selector, generate a new custom class (eg .class1-class2)
 					rClass.lastIndex = 0;
 					newTextChunk = newTextChunk.replace(rClass, function (match, className) {
 						currentClass = className + '-' + defaultClass;
-						console.warn('currentClass change')
 						return '';
 					}) + '.' + currentClass;
-					console.log('newText after replace: %s', newTextChunk);
-					// If the replacement class is not standard, add it to the selector class map
-					console.log('class: ', currentClass);
+					// If the replacement class is not standard, add it to the selector class map for jQuery
 					if (currentClass !== defaultClass) {
 						selectorClasses[selector] = currentClass;
 					}
 					newText.push(newTextChunk);
 				}
-				console.info('lastIndex: %d, length: %d', textIndex, text.length);
-				// Make sure to catch any remaining bit of text that wasn't matched
+				// Make sure to catch any remaining bit of CSS text that wasn't matched
 				if (textIndex < text.length) {
 					newText.push(text.substr(textIndex));
 				}
@@ -89,7 +84,7 @@ var testHoverSelectors = function () {
 	}
 
 /////S
-	var replacedExpected = ['div.hover-ie6','','#id.hover-ie6','.class-hover-ie6','div div.hover-ie6','','div #id.hover-ie6','div .class-hover-ie6','div.hover-ie6 div','','#id.hover-ie6 div','.class-hover-ie6 div','div#id.hover-ie6','div.class-hover-ie6','','','.class-hover-ie6#id','div div#id.hover-ie6','div div.class-hover-ie6','','','div#id.hover-ie6 div','div.class-hover-ie6 div','','','div#id div.class-hover-ie6','','div.class-hover-ie6 div#id','','div1.hover-ie6 div2 div3.subclass-hover-ie6'/*,'div2.hover-ie6','div1.hover-ie6','div2.hover-ie6','#id2.class-hover-ie6'*/,'','','','','','',''],
+	var replacedExpected = ['div.hover-ie6','','#id.hover-ie6','.class-hover-ie6','div div.hover-ie6','','div #id.hover-ie6','div .class-hover-ie6','div.hover-ie6 div','','#id.hover-ie6 div','.class-hover-ie6 div','div#id.hover-ie6','div.class-hover-ie6','','','#id.class-hover-ie6','div div#id.hover-ie6','div div.class-hover-ie6','','','div#id.hover-ie6 div','div.class-hover-ie6 div','','','div#id div.class-hover-ie6','','div.class-hover-ie6 div#id','','div1.hover-ie6 div2 div3.subclass-hover-ie6'/*,'div2.hover-ie6','div1.hover-ie6','div2.hover-ie6','#id2.class-hover-ie6'*/,'','','','','','',''],
 		selectorsExpected = ['div','','#id','.class','div div','','div #id','div .class','div','','#id','.class','div#id','div.class','','','.class#id','div div#id','div div.class','','','div#id','div.class','','','div#id div.class','','div.class','','div1','div1 div2 div3.subclass'/*,'div2','div1','div2','#id2.class'*/,'','','','','','',''];
 
 	for (i = 0, len = replaced.length; i < len; i++) {
@@ -113,6 +108,5 @@ var testHoverSelectors = function () {
 	output('#replaced', replaced);
 	output('#selectors-expected', selectorsExpected);
 	output('#selectors', selectors);
-	console.warn(selectorClasses);
 /////E
 }

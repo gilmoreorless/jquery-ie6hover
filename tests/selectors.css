@@ -28,9 +28,3 @@ div#id a.class:hover {color:red;}
 div.class:hover div#id {color:red;}
 a.class:hover div#id {color:red;}
 div1:hover div2 div3.subclass:hover {color:red;}
-/*
-div1, div2:hover {color:red;}
-div1:hover, div2 {color:red;}
-div1, div2:hover, div3 {color:red;}
-elem, #id, #id2.class:hover, .class {color:red;}
-*/
