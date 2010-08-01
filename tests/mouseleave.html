@@ -2,20 +2,7 @@
 <html>
 <head>
 	<title>jQuery IE6 hover plugin tests</title>
-	<!-- External stylesheet is loaded to test cross-domain access errors -->
-	<!--link rel="stylesheet" type="text/css" href="http://assets3.github.com/stylesheets/bundle_github.css" /-->
-	<script type="text/javascript">
-		var query = location.search,
-			rJQ = /jQuery=(\d\.\d(?:\.\d)?)/,
-			jQMatch = rJQ.exec(query),
-			jQVersion = jQMatch ? jQMatch[1] : '1.4.2',
-			useLive = !!(query.indexOf('live') + 1);
-		document.write('<script type="text/javascript" src="../lib/jquery-' + jQVersion + '.min.js"><\x2Fscript>');
-		if (query.indexOf('firebug') + 1) {
-			document.write('<script type="text/javascript" src="../lib/firebug-lite.js">{startOpened:true}<\x2Fscript>');
-		}
-	</script>
-	<script type="text/javascript" src="../jquery.ie6hover.js"></script>
+	<script type="text/javascript" src="../lib/jquery-1.4.js"></script>
 	<style type="text/css">
 		div {background-color:#FF0; font-family:Arial, Helvetica, sans-serif; padding:10px; margin:5px;}
 		div:hover {background-color:#F90;}
@@ -57,10 +44,16 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		$.ie6hover(useLive);
-		setTimeout(function () {
-			$('.cloneme:first').clone().appendTo('body');
-		}, 2000);
+		$(function () {
+			var bindHandler = function (event) {
+				console.log('bind', event.type, this);
+			}, liveHandler = function (event) {
+				console.log('live', event.type, this);
+			}
+			$.each(['mouseenter', 'mouseleave'], function (i, ev) {
+				$('div, li').bind(ev, bindHandler).live(ev, liveHandler);
+			});
+		})
 	</script>
 </body>
 </html>

@@ -23,6 +23,9 @@ Notes
 This script will not work on stylesheets loaded from a domain different from the domain the page is on,
 due to cross-site security policies.
 
+Also, there's no way to detect `!important` in CSS via JavaScript (as far as I'm aware), so any CSS `:hover`
+rules that use `!important` will not be 100% replicated.
+
 The hover scripts use the `mouseenter` and `mouseleave` events, unless you're using a jQuery version
 less than 1.4 in combination with the `live()` version of this function, in which case `mouseover` and
 `mouseout` are used (jQuery < 1.4 doesn't handle mouseenter and mouseleave in live events).
