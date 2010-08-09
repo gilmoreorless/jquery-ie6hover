@@ -1,0 +1,30 @@
+div:hover {color:red;}
+a:hover {color:red;}
+#id:hover {color:red;}
+.class:hover {color:red;}
+div div:hover {color:red;}
+div a:hover {color:red;}
+div #id:hover {color:red;}
+div .class:hover {color:red;}
+div:hover div {color:red;}
+a:hover div {color:red;}
+#id:hover div {color:red;}
+.class:hover div {color:red;}
+div#id:hover {color:red;}
+div.class:hover {color:red;}
+a#id:hover {color:red;}
+a.class:hover {color:red;}
+.class#id:hover {color:red;} /* #id.class also gets re-written to .class#id by IE6... odd */
+div div#id:hover {color:red;}
+div div.class:hover {color:red;}
+div a#id:hover {color:red;}
+div a.class:hover {color:red;}
+div#id:hover div {color:red;}
+div.class:hover div {color:red;}
+a#id:hover div {color:red;}
+a.class:hover div {color:red;}
+div#id div.class:hover {color:red;}
+div#id a.class:hover {color:red;}
+div.class:hover div#id {color:red;}
+a.class:hover div#id {color:red;}
+div1:hover div2 div3.subclass:hover {color:red;}
