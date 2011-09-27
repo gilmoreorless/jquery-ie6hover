@@ -38,7 +38,7 @@ This plugin uses the `mouseenter` and `mouseleave` events by default. However, j
 don't support these events with the `live()` bind method - so IE6 Hover switches to use `mouseover` and `mouseout`
 for these jQuery versions. Be aware that this can produce unexpected results with nested :hover elements.
 
-For jQuery versions 1.4 and above there is also a bug ([5884](http://dev.jquery.com/ticket/5884)) in the
+For jQuery versions 1.4 to 1.5.2 there is also a bug ([5884](http://dev.jquery.com/ticket/5884) - fixed in jQuery 1.6) in the
 jQuery core relating to nested `mouseenter` and `mouseleave` events that make them behave like `mouseover` and
 `mouseout` in certain circumstances. Be aware of this if using CSS selectors such as `li:hover` which can match
 multiple nested elements.
